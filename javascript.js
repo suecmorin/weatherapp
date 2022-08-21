@@ -18,10 +18,16 @@ searchFormEl.addEventListener('submit', handleSearchFormSubmit);
 
 function handleSearchFormSubmit(event) {
   event.preventDefault();
-  var citySelected = document.GetElementById("city").value;
+  var citySelected = document.GetElementById("inputcity").value;
   citySelected = citySelected[0].toUpperCase() + citySelected.slice(1).toLowerCase();
 
+//add instructions here to retrieve data from localStorage if this city has previously been selected
+//if (localStorage.getItem(dataSaved[0]) === citySelected) {
+// displaysavedWeather();
+// } else run function fetchCoordinates
+
 var coordinates = function (fetchCoordinates) {
+
 fetch("http://api.openweathermap.org/geo/1.0/direct?q=" +
 citySelected + "&limit=1&appid=" + apiKey)
 
@@ -29,7 +35,8 @@ citySelected + "&limit=1&appid=" + apiKey)
   if (response.ok) {
     console.log(response);
     response.json().then(function (data) {
-      console.log(data);  
+      const { lat , lon } = place;
+      console.log(place);  
 });
 } else {
   alert('Error: ' + response.statusText);
@@ -41,121 +48,71 @@ alert('Unable to connect to WeatherMap API');
 };
 }
 
-/*
-
-
-
-let weather = {
-  apiKey: "355c56b4969485a6f6e12d1c5ad93d88",
-  fetchWeather: function (city) {
-    fetch(
-      "https://api.openweathermap.org/data/2.5/weather?q=" +
-        city +
-        "&units=metric&appid=" +
-        this.apiKey
-    )
-      .then((response) => {
-        if (!response.ok) {
-          alert("No weather found.");
-          throw new Error("No weather found.");
-        }
-        return response.json();
-      })
-      .then((data) => this.displayWeather(data));
-  },
-  displayWeather: function (data) {
-    const { name } = data;
-    const { icon, description } = data.weather[0];
-    const { temp, humidity } = data.main;
-    const { speed } = data.wind;
-    document.querySelector(".city").innerText = "Weather in " + name;
-    document.querySelector(".icon").src =
-      "https://openweathermap.org/img/wn/" + icon + ".png";
-    document.querySelector(".description").innerText = description;
-    document.querySelector(".temp").innerText = temp + "°C";
-    document.querySelector(".humidity").innerText =
-      "Humidity: " + humidity + "%";
-    document.querySelector(".wind").innerText =
-      "Wind speed: " + speed + " km/h";
-    document.querySelector(".weather").classList.remove("loading");
-    document.body.style.backgroundImage =
-      "url('https://source.unsplash.com/1600x900/?" + name + "')";
-  },
-  search: function () {
-    this.fetchWeather(document.querySelector(".search-bar").value);
-  },
-};
-
-/* Fetching Data from OpenCageData Geocoder 
-let geocode = {
-  reverseGeocode: function (latitude, longitude) {
-    var apikey = "90a096f90b3e4715b6f2e536d934c5af";
-
-    var api_url = "https://api.opencagedata.com/geocode/v1/json";
-
-    var request_url =
-      api_url +
-      "?" +
-      "key=" +
-      apikey +
-      "&q=" +
-      encodeURIComponent(latitude + "," + longitude) +
-      "&pretty=1" +
-      "&no_annotations=1";
-
-    var request = new XMLHttpRequest();
-    request.open("GET", request_url, true);
-
-    request.onload = function () {
-
-      if (request.status == 200) {
-        var data = JSON.parse(request.responseText);
-        weather.fetchWeather(data.results[0].components.city);
-        console.log(data.results[0].components.city)
-      } else if (request.status <= 500) {
-
-        console.log("unable to geocode! Response code: " + request.status);
-        var data = JSON.parse(request.responseText);
-        console.log("error msg: " + data.status.message);
-      } else {
-        console.log("server error");
-      }
-    };
-
-    request.onerror = function () {
-      console.log("unable to connect to server");
-    };
-
-    request.send(); 
-  },
-  getLocation: function() {
-    function success (data) {
-      geocode.reverseGeocode(data.coords.latitude, data.coords.longitude);
-    }
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, console.error);
-    }
-    else {
-      weather.fetchWeather("Manipal");
-    }
+function getWeather() {
+  fetch("https://api.openweathermap.org/data/3.0/onecall?" +
+  "lat=" + lat + "&lon=" + lon + "units=imperial&appid=" + apiKey)
+  .then(function (response) {
+    if (response.ok) {
+      console.log(response);
+      response.json().then(function (data) {
+        var data = [ current.dt , current.weather.description , current.uvi , current.temp , current.humidity, current.wind_speed , current.weather.icon];
+        console.log(data);  
+  });
+  } else {
+    alert('Error: ' + response.statusText);
   }
-};
-
-document.querySelector(".search button").addEventListener("click", function () {
-  weather.search();
-});
-
-document
-  .querySelector(".search-bar")
-  .addEventListener("keyup", function (event) {
-    if (event.key == "Enter") {
-      weather.search();
-    }
+  })
+  .catch(function (error) {
+  alert('Unable to connect to WeatherMap API');
   });
 
-weather.fetchWeather("Manipal");
+  document.GetElementById("city").innerHTML = citySelected;
+  document.GetElementById("currentdate").innerHML = data[0];
+  document.GetElementById("temp").innerHTML = data[3];
+  document.GetElementById("wind").innerHTML = data[5];
+  document.GetElementById("humidity").innerHTML = data[4];
+  document.GetElementById("uvIndex").innerHTML = data[2];
+}
+
+
+function getForecast() {
+  fetch("api.openweathermap.org/data/2.5/forecast?q=" + "lat=" + lat +
+  "&lon=" + lon + "units=imperial&appid=" + apiKey)
+  .then(function (response) {
+    if (response.ok) {
+      console.log(response);
+      response.json().then(function (data) {
+        var data = { };
+        console.log(data);  
+  });
+  } else {
+    alert('Error: ' + response.statusText);
+  }
+  })
+  .catch(function (error) {
+  alert('Unable to connect to WeatherMap API');
+  });
+
+
+}
+//data = JSON.stringify(data);                           stringify data, add city, change array name, store in localStorage
+//data = data.unshift(citySelected);
+//data = dataSaved;
+//localStorage.setItem(dataSaved);
+//var bodyContentEl = document.createElement('li');                        add city to page under search box
+//bodyContentEl.classList.add( 'bg-seconary', 'text-white', 'rounded');
+ // bodyContentEl.innerHTML = citySelected + '<br/>';
 
 
 
-geocode.getLocation();
-*/
+
+
+//function displaysavedWeather() {                                  retrieve array from localStorage and display saved data
+// localStorage.getItem(dataSaved);
+//document.GetElementById("city").innerHTML = dataSaved[0];
+//document.GetElementById("currentdate").innerHTML = dataSaved[1];
+//document.GetElementById("temp").innerHTML = dataSaved[4];
+//document.GetElementById("wind").innerHTML = dataSaved[6];
+//document.GetElementById("humidity").innerHTML = dataSaved[5] ;
+//document.GetElementById("uvIndex").innerHTML = dataSaved[3];
+//}
