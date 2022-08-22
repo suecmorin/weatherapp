@@ -1,11 +1,12 @@
 /* OpenWeatherMap is a free API which requires longitude/latitude or zip code to get weather data
-/*logitude/latitude or zip code data is available from Geocoding API
-/*steps 0. define variables
-/* 1. handle form input (prevent default,convert to uppercase, compare city name to geocoding api
-/*2. fetch weather data from OpenWeatherMap for city and display on screen
-/*3. fetch 5-day forecast from OpenWeatherMap for city and display on screen
-/*4. store data in local storage(setItem)
-/*5. retrieve data from local storage (getItem) if user clicks same city again
+/*logitude/latitude is available from Geocoding API
+/*steps: 
+/*1. define variables
+/*2. handle form input (prevent default,convert to uppercase, compare city name to geocoding api
+/*3. fetch weather data from OpenWeatherMap for city and display on screen
+/*4. fetch 5-day forecast from OpenWeatherMap for city and display on screen
+/*5. store data in local storage(setItem)
+/*6. retrieve data from local storage (getItem) if user clicks same city again
 */
 
 
@@ -22,11 +23,12 @@ function handleSearchFormSubmit(event) {
   citySelected = citySelected[0].toUpperCase() + citySelected.slice(1).toLowerCase();
 
 //add instructions here to retrieve data from localStorage if this city has previously been selected
-//if (localStorage.getItem(dataSaved[0]) === citySelected) {
+//for (i = 0; i < datasaved.(i); i++) {}
+//if (localStorage.getItem(dataSaved.(i)[0]) === citySelected) {
 // displaysavedWeather();
 // } else run function fetchCoordinates
 
-var coordinates = function (fetchCoordinates) {
+function fetchCoordinates() {
 
 fetch("http://api.openweathermap.org/geo/1.0/direct?q=" +
 citySelected + "&limit=1&appid=" + apiKey)
@@ -35,8 +37,8 @@ citySelected + "&limit=1&appid=" + apiKey)
   if (response.ok) {
     console.log(response);
     response.json().then(function (data) {
-      const { lat , lon } = place;
-      console.log(place);  
+      const { lat , lon } = data;
+      console.log(data);  
 });
 } else {
   alert('Error: ' + response.statusText);
@@ -55,7 +57,6 @@ function getWeather() {
     if (response.ok) {
       console.log(response);
       response.json().then(function (data) {
-        var data = [ current.dt , current.weather.description , current.uvi , current.temp , current.humidity, current.wind_speed , current.weather.icon];
         console.log(data);  
   });
   } else {
@@ -65,26 +66,46 @@ function getWeather() {
   .catch(function (error) {
   alert('Unable to connect to WeatherMap API');
   });
-
+  var dayname1 = new Date(value.dt * 1000).toLocaleDateString();
   document.GetElementById("city").innerHTML = citySelected;
-  document.GetElementById("currentdate").innerHML = data[0];
-  document.GetElementById("temp").innerHTML = data[3];
-  document.GetElementById("wind").innerHTML = data[5];
-  document.GetElementById("humidity").innerHTML = data[4];
-  document.GetElementById("uvIndex").innerHTML = data[2];
+  document.GetElementById("currentdate").innerHTML = dayname1;
+  document.GetElementById("weathericon").innerHTML = response.weather.icon;
+  document.GetElementById("temp").innerHTML = (response.current.temp + "  degrees");
+  document.GetElementById("wind").innerHTML = (response.current.wind_speed  + "  MPH");
+  document.GetElementById("humidity").innerHTML = (response.current.humidity + "%");
+  document.GetElementById("uvIndex").innerHTML = response.current.uvi;
 }
 
 
 function getForecast() {
+  
   fetch("api.openweathermap.org/data/2.5/forecast?q=" + "lat=" + lat +
   "&lon=" + lon + "units=imperial&appid=" + apiKey)
   .then(function (response) {
     if (response.ok) {
       console.log(response);
       response.json().then(function (data) {
-        var data = { };
-        console.log(data);  
-  });
+        var forecastEl = document.getElementsByClassName("forecast");
+        forecastEl[0].classList.add('loaded');
+          var fday = "";
+          data.daily.forEach((value, index) => {
+            if (index > 0) {
+              var dayname2 = new Date(value.dt * 1000).toLocaleDateString();
+              var icon = value.weather[0].icon;
+              var temp = value.temp.day.toFixed(0);
+              fday = `<div class= "card  bg-primary text-white forecast-day">
+                <p> class= "card-text" ${dayname2}</p>
+                <p><span class= "card-text" ${icon}></span></p>
+                <p> class= "card-text" ${temp}</p>
+                <p> class= "card-text" ${wind}</p>
+                <p> class= "card-text" ${humidity}</p>
+              </div>`;
+              forecastEl[0].insertAdjacentHTML('beforeend', fday);
+            }
+          });
+      })
+        
+  
   } else {
     alert('Error: ' + response.statusText);
   }
@@ -92,27 +113,28 @@ function getForecast() {
   .catch(function (error) {
   alert('Unable to connect to WeatherMap API');
   });
-
-
 }
-//data = JSON.stringify(data);                           stringify data, add city, change array name, store in localStorage
-//data = data.unshift(citySelected);
-//data = dataSaved;
-//localStorage.setItem(dataSaved);
+   
 //var bodyContentEl = document.createElement('li');                        add city to page under search box
-//bodyContentEl.classList.add( 'bg-seconary', 'text-white', 'rounded');
- // bodyContentEl.innerHTML = citySelected + '<br/>';
+//bodyContentEl.classList.add( 'bg-secondary', 'text-white', 'rounded');
+//bodyContentEl.innerHTML = citySelected + '<br/>';
+
+
+//for (i = 0; i < datasaved.length; i+) {
+//datasaved.(i)= [citySelected, response.current.dt, response.weather.icon, response.current.temp, response.current.wind_speed, response.current.humidity, response.current.uvi]                          stringify data, add city, change array name, store in localStorage
+
+//localStorage.setItem(dataSaved.(i));
+// }
 
 
 
-
-
-//function displaysavedWeather() {                                  retrieve array from localStorage and display saved data
-// localStorage.getItem(dataSaved);
-//document.GetElementById("city").innerHTML = dataSaved[0];
-//document.GetElementById("currentdate").innerHTML = dataSaved[1];
-//document.GetElementById("temp").innerHTML = dataSaved[4];
-//document.GetElementById("wind").innerHTML = dataSaved[6];
-//document.GetElementById("humidity").innerHTML = dataSaved[5] ;
-//document.GetElementById("uvIndex").innerHTML = dataSaved[3];
+//function displaysavedWeather() {                                  retrieve array from localStorage and display saved data-I don't think this is right
+// localStorage.getItem(dataSaved.(i));
+//document.GetElementById("city").innerHTML = dataSaved.(i)[0];
+//document.GetElementById("currentdate").innerHTML = dataSaved.(i)[1];
+//document.GetElementById("weathericon").innerHTML = dataSaved.(i)[2];
+//document.GetElementById("temp").innerHTML = dataSaved.(i)[3];
+//document.GetElementById("wind").innerHTML = dataSaved.(i)[4];
+//document.GetElementById("humidity").innerHTML = dataSaved.(i)[5] ;
+//document.GetElementById("uvIndex").innerHTML = dataSaved.(i)[6];
 //}
