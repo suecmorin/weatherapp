@@ -25,12 +25,15 @@ var citiesSearched = {};
   //  getWeather(citySelected);
   // } else { fetchCoordinates(citySelected); }
 
-  //function fetchCoordinates(citySelected) {
+  function fetchCoordinates(citySelected) {
+    var citySelected = $("#inputcity").value;
     fetch(
       "http://api.openweathermap.org/data/2.5/weather?q=" + citySelected +
         "&appid=" + apiKey) 
         .then(response => response.json())
-        .then (data => console.log(data))
+        .then (console.log(response.json))
+        console.log(citySelected)
+    }
   //    .then(function(response)
   //        console.log(response);
   //          var lat = response.data.coord.lat;
