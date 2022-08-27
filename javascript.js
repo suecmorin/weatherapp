@@ -10,14 +10,53 @@
 */
 
 var apiKey = "355c56b4969485a6f6e12d1c5ad93d88";
-var searchFormEl = $("#submit-button");
-var citiesSearched = {};
+var citiesSearched = [ ];
 
-//searchFormEl.on("click", handleSearchFormSubmit());
+var cityEl = document.querySelector('#inputcity');
 
-//function handleSearchFormSubmit() {
-  // event.preventDefault();
- var citySelected = $("#inputcity").value;
+document.getElementById("submit-button").addEventListener('click', handleSearchFormSubmit);
+var citySelected = document.querySelector('#inputcity').value;
+
+fetchWeather();
+
+function handleSearchFormSubmit(event) {
+  event.preventDefault();
+
+  var citySelected = document.querySelector('#inputcity').value;
+  citiesSearched.push.citySelected;                                    //save to searched cities array
+
+  console.log(citySelected);
+
+  if (!citySelected) {
+    console.error('You need a city name!');
+    return;
+  }
+
+ var queryString = "http://api.openweathermap.org/data/2.5/weather?q=" + citySelected + "&APPID=" + apiKey;
+}
+
+
+
+function fetchWeather() {
+  var citySelected = document.querySelector('#inputcity').value;
+  var queryString = "http://api.openweathermap.org/data/2.5/weather?q=" + citySelected + "&APPID=" + apiKey;
+  fetch(queryString)
+  .then(function (response) {
+  return response.json();
+  console.log(response);
+  })
+}
+  //.then(function(data){
+//
+ // })
+//
+ // .then((response) => {
+ //   response.json().then((data) => {
+ //     console.log(data);
+ //   });
+ // });
+//}
+
   
   //add instructions here to retrieve data from localStorage if this city has previously been selected
   //cit
@@ -25,15 +64,15 @@ var citiesSearched = {};
   //  getWeather(citySelected);
   // } else { fetchCoordinates(citySelected); }
 
-  function fetchCoordinates(citySelected) {
-    var citySelected = $("#inputcity").value;
-    fetch(
-      "http://api.openweathermap.org/data/2.5/weather?q=" + citySelected +
-        "&appid=" + apiKey) 
-        .then(response => response.json())
-        .then (console.log(response.json))
-        console.log(citySelected)
-    }
+  //function fetchCoordinates(citySelected) {
+ //   var citySelected = $("#inputcity").value;
+  //  fetch(
+  //    "http://api.openweathermap.org/data/2.5/weather?q=" + citySelected +
+  //      "&appid=" + apiKey) 
+  //      .then(response => response.json())
+ //       .then (console.log(response.json))
+  //      console.log(citySelected)
+  //  }
   //    .then(function(response)
   //        console.log(response);
   //          var lat = response.data.coord.lat;
