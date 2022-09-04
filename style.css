@@ -1,11 +1,15 @@
-.jumbotron {
-  background-image: linear-gradient (to right, blue, indigo);
-}
+
 .col {
   padding-left: 2px;
   padding-right: 2px;
 }
-
+body{
+  background-image: url('./pexels-tahir-shaw-186980.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no repeat;
+  height: 100vh;
+}
 
 
  
