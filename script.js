@@ -7,18 +7,21 @@ $(document).ready(function () {
   if (citiesSearched !== null) {
     citiesSearched2 = JSON.parse(localStorage.getItem("citiesSearched"));
   } else {
-    $(".list-group").empty(); //cities searched
-    $(".card-group").empty(); //5 day forecast
-    $("col-sm-10").empty(); //today's weather
+    $("#citysearched").empty(); //cities searched
+    $("#todayweather").empty(); //5 day forecast
+    $("#carddeck").empty(); //today's weather
   }
 });
 
-document
-  .getElementById("submit-button")
+document.getElementById("submit-button")
   .addEventListener("click", handleSearchFormSubmit);
+
 
 function handleSearchFormSubmit(event) {
   event.preventDefault();
+
+//$("#todayweather").empty();
+//$("#carddeck").empty();
 
   var citySelected = document.getElementById("inputcity").value;
   if (citySelected == null) {
@@ -35,10 +38,7 @@ function handleSearchFormSubmit(event) {
 function fetchWeather() {
   var citySelected = document.getElementById("inputcity").value;
   var queryString =
-    "http://api.openweathermap.org/data/2.5/weather?q=" +
-    citySelected +
-    "&APPID=" +
-    apiKey;
+    "http://api.openweathermap.org/data/2.5/weather?q=" + citySelected + "&APPID=" + apiKey;
   fetch(queryString)
     .then((response) => {
       if (response.ok) {
@@ -63,22 +63,17 @@ function fetchWeather() {
       console.log(tempVar);
       weatherIcon = data.weather[0].icon;
       console.log(weatherIcon);
-      var weatherIconURL =
-        "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+      var weatherIconURL = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
       console.log(weatherIconURL);
       document.getElementById("icon").src = weatherIconURL;
       $("#city").append(" " + citySelected + "  " + dayVar);
       $("#temp").append("Temp   " + tempVar + "   degrees");
-      $("#wind").append("Wind  " + data.wind.speed + "  mph");
+      $("#wind").append("Wind  " + data.wind.speed + "  MPH");
       $("#humidity").append("Humidity    " + data.main.humidity + "%");
 
       uviURL =
-        "http://api.openweathermap.org/data/2.5/uvi?&appid=" +
-        apiKey +
-        "&lat=" +
-        latVar +
-        "&lon=" +
-        longVar;
+        "http://api.openweathermap.org/data/2.5/uvi?&appid=" + apiKey + "&lat=" +
+        latVar + "&lon=" + longVar;
       fetch(uviURL)
         .then((response) => {
           if (response.ok) {
@@ -131,39 +126,49 @@ function fetchWeather() {
             console.log(dayVar2);
             var icon2 = data.list[i].weather[0].icon;
             console.log(icon2);
-            //var weatherIconURL2 = "http://openweathermap.org/img/w/" + icon2 + ".png";
-            var daycard = document.createElement("div").classList.add("card");
-            var dayimage = document.createElement("img").classList.add("card-img-top");
+            var daycard = document.createElement("div");
+            daycard.classList.add("card");
+            daycard.classList.add("cardone");
+            var dayimage = document.createElement("img");
+            dayimage.classList.add("card-img-top");
             document.getElementsByClassName("card-img-top").src =
-              "http://openweathermap.org/img/w/" +data.list[i].weather[0].icon + ".png";
+              "http://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png";
            
             var rawtemp2 = data.list[i].main.temp;
             var tempVar2 = (1.8 * (rawtemp2 - 273.15) + 32).toFixed(1);
+            var cardTitle = document.createElement("h5");
+            cardTitle.classList.add("card-title");
+            cardTitle.append(dayVar2);
 
-            var daycardText = document.createElement("ul").classList.add("card-text", "list-group");
-            var node1 = document.createElement("li").classList.add("list-group-item");
-            var textnode1 = document.createTextNode("Date  " + dayVar2);
-            node1.appendChild(textnode1);
+            var daycardText = document.createElement("ul");
+            daycardText.classList.add("card-text", "list-group");
+           var node1 = document.createElement("li");
+           node1.classList.add("list-group-item");
+           node1.append(data.list[i].weather[0].description);
             
-            var node2 = document.createElement("li").classList.add("list-group-item");
-            var textnode2 = document.createTextNode("Temp    " + tempVar2);
-            node2.appendChild(textnode2);
-
-            var node3 = document.createElement("li").classList.add("list-group-item");
-            var textnode3 = document.createTextNode("Wind   " + data.list[i].wind.speed);
-            node3.appendChild(textnode3);
-
-            var node4 = document.createElement("li").classList.add("list-group-item");
-            var textnode4 = document.createTextNode("Humidity   " + data.list[i].main.humidity + "%");
-            node4.appendChild(textnode4);
-          
-            document.appendChild(daycard);
+            var node2 = document.createElement("li");
+            node2.classList.add("list-group-item");
+            node2.append(tempVar2 + "   degrees");
+            
+            var node3 = document.createElement("li");
+            node3.classList.add("list-group-item");
+            node3.append("Wind   " + data.list[i].wind.speed + "  MPH");
+           
+            var node4 = document.createElement("li");
+            node4.classList.add("list-group-item");
+            node4.append("Humidity   " + data.list[i].main.humidity + "%");
+            
+           daycardText.append(node1, node2, node3, node4);
+           daycard.appendChild(dayimage);
+           daycard.append(cardTitle);
+           daycard.append(daycardText);
+           document.getElementById("carddeck").append(daycard);
           }
-
-          var citylistEl = document.getElementsByClassName("list-group-flush");
+          
+          var citylistEl = document.getElementById("citysearched");
           var citysearchedEl = document.createElement("li");
-          citysearchedEl.innerHTML = citySelected + "<br/>";
-          citylistEl.appendChild(citysearchedEl);
+          citysearchedEl.append(citySelected);
+          document.getElementById("citysearched").append(citysearchedEl);
         });
     });
 }

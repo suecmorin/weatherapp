@@ -26,37 +26,36 @@
       
         <div class="card-body">
           <p class="card-header text-white">Searched Cities</p>
-        <ul class="list-group list-group-flush bg-secondary text-white rounded">
+        <ul class="list-group list-group-flush list-unstyled bg-transparent text-white rounded" id="citysearched">
  <!--search history is displayed here-->       
         </ul>
       </div>
     </div> 
-      <div class="card col-sm-10 text-centered bg-transparent text-white rounded pb-0 mb-0">
+      <div class="card col-sm-10 text-centered bg-transparent text-white rounded pb-0 mb-0" id="todayweather">
         <div class="city h2" id="city">
           <img id="icon" src=""></div>
-          <div class="h4" id="temp"></div>
-          <div class="h4"  id="wind"></div>
-          <div class="h4" id="humidity"></div>
-          <div class="h4" id="uvindex"></div> 
+          <div class="h5" id="temp"></div>
+          <div class="h5"  id="wind"></div>
+          <div class="h5" id="humidity"></div>
+          <div class="h5" id="uvindex"></div> 
         </div> 
         </div>
       </div>
         <div class="row justify-content-around">
-          <div class="Forecast text-white h2 text-centered" id="deckheading"></div>
-        <div class="card-group col-md-8 forecastDeck bg-transparent text-white">
-        <div class="card" ></div>
-
-               <!--add div class=card then <p> class = card-text to add info to card-->       
+          <div class="h2 text-centered text-white" id="deckheading"></div>
+          <div class="row justify-content-around"></div>
+          <div class="card-group col-sm-10 forecastDeck bg-transparent text-white" id="carddeck">
+          <div></div>
+               <!--add div class=card then card-text to add info to card-->       
 
         </div>  
       </div>
-      
       </main>
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-    <script src="part1.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

@@ -11,9 +11,22 @@ body{
   height: 100vh;
 }
 .ul {
-  list: unstyled;
+  list-style-type:  none;
+  color: white;
+  font-weight: bold;
 }
-
+.list-group-item {
+color: white;
+background: rgb(39, 130, 190);
+}
+.card-text {
+  color: white;
+}
+.cardone {
+  background: rgb(24, 107, 161);
+  color: white;
+  padding: 10px;
+}
 
  
  
