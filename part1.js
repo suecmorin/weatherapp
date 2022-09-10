@@ -62,7 +62,7 @@ function fetchWeather() {
     console.log(weatherIconURL);
     document.getElementById("icon").src = weatherIconURL;
    $("#city").append(" " + citySelected + "  " +  dayVar);
-   $("#temp").append("Temperature   " + tempVar + "   degrees");
+   $("#temp").append("Temp   " + tempVar + "   degrees");
    $("#wind").append("Wind  " + data.wind.speed + "  mph");
    $("#humidity").append("Humidity    " + data.main.humidity + "%");
 
@@ -72,65 +72,82 @@ function fetchWeather() {
   if (response.ok) {
     return response.json();
   } else {
-    alert("City not found. Please try again.");
-        $("#inputcity").reset();
     throw new Error("NETWORK RESPONSE ERROR");
   }
 })
 .then((data) => {
   console.log(data);
   console.log(data.value);
-  })
-.catch((error) => console.error("FETCH ERROR:", error));
-$("#uvindex").append("UV" + data.value);
-//if (uvIndexRange < 3) {
-//    $("#uvindex").append("MINIMAL RISK" + '<br>' + "from unprotected sun exposure");
-//} else if (uvIndexRange >= 3, uvIndexRange < 6) {
-//    $("#uvindex").append("LOW RISK" + '<br>' + "from unprotected sun exposure");
-//} else if (uvIndexRange >= 6, uvIndexRange < 8) {
-//    $("#uvindex").append("MODERATE RISK" + '<br>' + "from unprotected sun exposure");
-// } else if (uvIndexRange => 8) { $("#uvindex").append("HIGH RISK" + '<br>' + "from unprotected sun exposure");
-//}
-forecastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + citySelected + "&appid=" + apiKey
+uvIndexRange = data.value;
+if (uvIndexRange < 3) {
+    $("#uvindex").append("MINIMAL RISK" + '<br>' + "from unprotected sun exposure");
+} else if (uvIndexRange >= 3, uvIndexRange < 6) {
+    $("#uvindex").append("LOW RISK" + '<br>' + "from unprotected sun exposure");
+} else if (uvIndexRange >= 6, uvIndexRange < 8) {
+    $("#uvindex").append("MODERATE RISK" + '<br>' + "from unprotected sun exposure");
+ } else if (uvIndexRange => 8) { $("#uvindex").append("HIGH RISK" + '<br>' + "from unprotected sun exposure");
+}
+})
+
+forecastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + citySelected + "&appid=" + apiKey;
+console.log(citySelected);
 fetch(forecastURL)
   .then((response) => {
    if (response.ok) {
      return response.json();
    } else {
-    alert("City not found. Please try again.");
-    $("#inputcity").reset();
      throw new Error("NETWORK RESPONSE ERROR");
-
    }
    })
    .then ((data) => {
      console.log(data);
-   })
-   .catch((error) => console.error("FETCH ERROR:", error));
 
- var forecastEl = document.getElementsByClassName("forecast"); //write the 5 forecast blocks to screen line 42 html
- forecastEl.textContent = "Five Day Forecast";
+ var forecastEl = document.getElementsByClassName("forecastDeck"); //write the 5 forecast blocks to screen line 42 html
  
- for (i = 0; i < 5; i++) {
-   var dayVar2 = moment().add(i).format("l");
-//   var icon2 = data.list[i].weather[0].icon;
-//   var weatherIconURL2 = "http://openweathermap.org/img/w/" + icon2 + ".png";
-//   var temp = data.main.temp;
-  // var daycard = document.createElement("div").classList.add("card");
-//   var dayimage = document.createElement("img").classList.add("card-img-top src= {weatherIconURL2 + i}");
- //  var daycardText = document.createElement("p").classList.add("card-text");
- // daycardText.append(dayVar2);
-//   rawtemp = data.main.temp;
-//   tempVar = (1.80 * (rawtemp - 273.15) + 32).toFixed(1);
-//   daycardText.append({tempVar + i});
-//   daycardText.append({data.wind.speed + i});
-//   daycardText.append({data.main.humidity + i});  
- // forecastEl.append.daycard;
+ $("#deckheading").text("5 Day Forecast");
+ for (let i = 0; i < 5; i++) {
+  var dayVar2 = moment().add(i, 'day').format('ll');
+  console.log(dayvar2);
+   var icon2 = data.list[i].weather[0].icon;
+  var weatherIconURL2 = "http://openweathermap.org/img/w/" + icon2 + ".png";
+   var daycard = document.createElement("div").classList.add("card");
+   var dayimage = document.createElement("img").classList.add("card-img-top");
+   //dayimage.src = "http://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png";
+   var daycardText = document.createElement("ul").classList.add("card-text");
+  var rawtemp2 = data.list[i].main.temp;
+  var tempVar2 = (1.80 * (rawtemp2 - 273.15) + 32).toFixed(1);
+  
+  //var node0 = document.createElement("li");
+  //var textnode0 = document.createTextNode(dayVar2);
+  //node0.appendChild(textnode0);
+  //daycardText.appendChild(node0);
+var node = document.createElement("li");
+var textnode = document.createTextNode("Temp    " + tempVar2);
+node.appendChild(textnode);
+daycardText.appendChild(node);
+var node1 = document.createElement("li");
+var textnode1 = document.createTextNode("Wind   " + data.list[i].wind.speed);
+node1.appendChild(textnode1);
+daycardText.appendChild(node1);
+var textnode2 = document.createTextNode("Humidity   " + data.list[i].main.humidity + "%");
+node2.appendChild(textnode2);
+daycardText.appendChild(node2);
+ //var tempcast = $("<p>").text("Temp    " + tempVar2);
+ //var windcast = $("<p>").text("Wind   " + data.list[i].wind.speed);
+ //var humidcast = $("<p>").text("Humidity   " + data.list[i].main.humidity + "%"); 
+ //daycardText.append(datecast);
+ //daycardText.append(tempcast);
+ //tempcast.append(windcast);
+ //windcast.append(humidcast);
+ //daycard.append(daycardText);
+  forecastEl.appendChild.daycard;
  }
 
-//var citylistEl = document.getElementsByClassName("list-group");
-//var citysearchedEl = document.createElement('li');    
-//citysearchedEl.innerHTML = citySelected + '<br/>';
-   
+var citylistEl = document.getElementsByClassName("list-group");
+var citysearchedEl = document.createElement('li');    
+citysearchedEl.innerHTML = citySelected + '<br/>';
+//citylistEl.appendChild.(citysearchedEl);
+
  })
+})
 }
